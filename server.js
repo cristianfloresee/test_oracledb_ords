@@ -28,7 +28,7 @@ function initWebServer() {
     app.use('/', serveStatic(__dirname + '/public'));
     app.use('/vendor', serveStatic(__dirname + '/bower_components'));
 
-    //Create end points for the application
+    //CREATE ENDPOINTS FOR THE APPLICATION
     app.get('/api/oracledb', throwRequests);
 
 
@@ -37,7 +37,7 @@ function initWebServer() {
     });
 }
 
-//FUNCIONES
+//FUNCTIONS
 function throwRequests(req, res){
     var t0= performance.now();
     pool.createPool(()=>{
