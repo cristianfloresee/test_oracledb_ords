@@ -39,27 +39,22 @@ function initWebServer() {
 
 //FUNCTIONS
 function throwRequests(req, res){
-    //console.time('throwRequests');
+    console.time('throwRequests');
     pool.createPool(()=>{
-
+        console.log("\npool created...");
+        let num_queries = 0;
         for(let i=0;i<10;i++){ //REPEAT
             for(let j=10;j<50;j+=10){ //DEPARTMENTS
-                getDepartmentORCL(i, ()=>{ console.log(`department_id: ${j} -> round: ${i+1}`)});
+                getDepartmentORCL(j, ()=>{ 
+                    num_queries++;
+                    console.log(`query: ${num_queries}\ndepartment_id: ${j} -> round: ${i}`);
+                    if(num_queries === 40)console.timeEnd('throwRequests');
+                });
             }
         }
-        //console.timeEnd('throwRequests');
-        
-      
     });
-    
 }
     
-    /*for(let i=0;i<100;i++){
-            for(let j=10;j<=270;j+=10){
-                getDepartmentORCL(j);
-            }
-        }*/
-        //
 
 
 
