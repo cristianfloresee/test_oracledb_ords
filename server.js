@@ -2,12 +2,13 @@
 
 'use strict'
 
-var performance  = require('perf_hooks');
+//var performance  = require('perf_hooks');
 var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
 var serveStatic = require('serve-static');
 var oracledb = require('oracledb');
+
 var app;
 var httpServer;
 
@@ -21,7 +22,6 @@ function initWebServer() {
     app = express();
     httpServer = http.Server(app);
 
- 
     app.use(bodyParser.urlencoded({ extended: false }));
 
     //Create 2 static file end points, 1 for public and 1 for bower_components
@@ -39,17 +39,19 @@ function initWebServer() {
 
 //FUNCTIONS
 function throwRequests(req, res){
-    var t0= performance.now();
+    //console.time('throwRequests');
     pool.createPool(()=>{
 
-        getDepartmentORCL(10, (re)=>{
-            res.send(re);        
-            console.log(`resp: ${re}`);
-        })
-
+        for(let i=10;i<50;i+=10){ //EMPLOYEES
+            for(let j=0;j<20;j++){ //QUERIES
+                getDepartmentORCL(i, ()=>{ console.log(`city_id: ${i} -> query: ${j+1}`)});
+            }
+        }
+        //console.timeEnd('throwRequests');
+        
+      
     });
-    var t1=performance.now();
-    console.log("SECS: ", (t1-t0));
+    
 }
     
     /*for(let i=0;i<100;i++){
@@ -267,7 +269,7 @@ function getDepartmentORCL(departmentId, callback) {
     var employees = [];
     var empMap = {};
     var jobHistory = [];
-
+    //console.log("init")
 
     //CREO LA CONEXIÓN
     pool.getPool().getConnection(
@@ -309,7 +311,7 @@ function getDepartmentORCL(departmentId, callback) {
                             },
                             function (err, results) {
                                 var deptRow;
-                                console.log("\n\nquery 1:\n", results);
+                                //console.log("\n\nquery 1:\n", results);
                                 if (err) {
                                     callback(err);
                                     return;
@@ -362,7 +364,7 @@ function getDepartmentORCL(departmentId, callback) {
                             },
                             function (err, results) {
                                 var empRows;
-                                console.log("\n\nquery 2:\n", results);
+                                //console.log("\n\nquery 2:\n", results);
                                 if (err) {
                                     callback(err);
                                     return;
@@ -407,7 +409,7 @@ function getDepartmentORCL(departmentId, callback) {
                             },
                             function (err, results) {
                                 var jobRows;
-                                console.log("\n\nquery 3:\n", results);
+                                //console.log("\n\nquery 3:\n", results);
                                 if (err) {
                                     callback(err);
                                     return;
@@ -435,7 +437,7 @@ function getDepartmentORCL(departmentId, callback) {
 
                 function (err, results) {
 
-                    console.log("\n\nfinal: ", results);
+                    //console.log("\n\nfinal: ", results);
                     if (err) throw err;
 
                     department.employees = employees;
@@ -447,7 +449,7 @@ function getDepartmentORCL(departmentId, callback) {
 
                     connection.release(function (err) {
                         if (err) console.error(err);
-                        
+                        //console.log("reds");
                         callback(department); //AQUI
                     });
                 }

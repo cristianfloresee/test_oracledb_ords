@@ -17,7 +17,7 @@ function createPool(callback) {
             if (err) throw err;
 
             connectionPool = pool;
-            console.log("pool created...");
+            console.log("\npool created...");
 
             callback();
         }
