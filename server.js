@@ -42,9 +42,9 @@ function throwRequests(req, res){
     //console.time('throwRequests');
     pool.createPool(()=>{
 
-        for(let i=10;i<50;i+=10){ //EMPLOYEES
-            for(let j=0;j<20;j++){ //QUERIES
-                getDepartmentORCL(i, ()=>{ console.log(`city_id: ${i} -> query: ${j+1}`)});
+        for(let i=0;i<10;i++){ //REPEAT
+            for(let j=10;j<50;j+=10){ //DEPARTMENTS
+                getDepartmentORCL(i, ()=>{ console.log(`department_id: ${j} -> round: ${i+1}`)});
             }
         }
         //console.timeEnd('throwRequests');
